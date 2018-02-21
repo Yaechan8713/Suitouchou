@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onClick(DialogInterface dialogInterface, int i) {
                                                             //「了解」ボタンを押したときの処理
-//                                    EditTextの初期化
+//                                                               EditTextの初期化
                                                             shouhinnedittext.setText("");
                                                             moneyedit.setText("0");
                                                         }

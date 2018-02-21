@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         int t = 0;
                                         t++;
+                                        t = 0;
                                     }
                                 }
                         )

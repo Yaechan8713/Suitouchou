@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Suitouchou</string>
+    <string name="suitouchou">出納帳</string>
+    <string name="ryoukai">了解</string>
+    <string name="error">エラー</string>
+    <string name="kakunin">確認</string>
+    <string name="cancel">キャンセル</string>
+    <string name="delete">削除</string>
+
+    <string-array name="spn">
+        <item>商品名：</item>
+        <item>リストタイトル：</item>
+    </string-array>
+</resources>

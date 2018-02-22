@@ -2,6 +2,7 @@ package reduce.project.yaerei.suitouchou;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     EditText moneyedit,shouhinnedittext;
 
     ListView listview;
+
+    Intent intent;
 
     int sum,inport;
 
@@ -68,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 final String item = (String)adapter.getItem(i);
 
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("リスト表示")
-                        .setMessage("保存したリストを表示しております。\n\n" + item)
+                        .setTitle(R.string.list)
+                        .setMessage(R.string.input + item)
                         .setNegativeButton(
                                 R.string.kakunin,
 
@@ -170,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
                                         //支出・収入の金額が入力されてない場合
 
                                         new AlertDialog.Builder(MainActivity.this)
-                                                .setTitle(R.string.error/*"@string/error"*/)
-                                                .setMessage("支出・収入の金額が入力されておりません。支出・収入の金額は0円として計算します。")
+                                                .setTitle(R.string.error)
+                                                .setMessage("支出・収入の金額が入力されておりません。\n支出・収入の金額は0円として計算します。")
                                                 .setPositiveButton(
                                                         R.string.ryoukai,
 
@@ -193,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
 
                                     if (inport == 0) {
                                         //EditText moneyeditで入力した値が0の場合
-                                        sum = sum;
                                         str = "支出なし。収入なし。";
                                     } else {
                                         //EditText moneyeditで入力した値が0ではない場合
@@ -255,5 +257,11 @@ public class MainActivity extends AppCompatActivity {
     public void newint(String newstr){
         Item item = new Item();
         item = new Select().from(Item.class).where("name =?",newstr).executeSingle();
+    }
+
+    public void lendmoney(View v){
+        intent = new Intent(this,shakkinnActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

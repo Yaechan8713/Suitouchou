@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
 
+
     <application
         android:allowBackup="true"
         android:name="com.activeandroid.app.Application"
@@ -14,6 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data android:name="AA_DB_NAME" android:value="List.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="3" />
+        <meta-data
+            android:name="AA_MODELS"
+            android:value="reduce.project.yaerei.Suitouchou.Item,
+            reduce.project.yaerei.Suitouchou.peopleItem,
+            reduce.project.yaerei.Suitouchou.shakkinnItem"/>
+
         <activity android:name=".MainActivity"
             android:label="@string/main">
             <intent-filter>
@@ -25,6 +35,15 @@
 
         <activity android:name=".shakkinnActivity"
             android:label = "@string/shakkinn"/>
+
+        <activity android:name=".passwordActivity"
+            android:label = "@string/password"/>
+
+        <activity android:name=".peopleActivity"
+            android:label="@string/people"/>
+
+        <activity android:name=".passwordinputActivity"
+            android:label="@string/passwordinput"/>
 
     </application>
 

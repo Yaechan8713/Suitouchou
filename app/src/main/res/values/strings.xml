@@ -11,6 +11,8 @@
     <string name="list">リスト表示</string>
     <string name="input">保存したリストを表示しております。\n\n</string>
     <string name="ok">OK</string>
+    <string name="password">パスワード</string>
+    <string name="people">借金差出人</string>
 
     <string-array name="spn">
         <item>商品名：</item>

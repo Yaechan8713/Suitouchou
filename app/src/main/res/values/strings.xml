@@ -10,6 +10,7 @@
     <string name="shakkinn">借金出納帳</string>
     <string name="list">リスト表示</string>
     <string name="input">保存したリストを表示しております。\n\n</string>
+    <string name="ok">OK</string>
 
     <string-array name="spn">
         <item>商品名：</item>

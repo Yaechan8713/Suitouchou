@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -212,7 +213,20 @@ public class MainActivity extends AppCompatActivity {
                                     str2 = inport + str;
                                     outorin.setText(str2);
 
-                                    String str3 = (shouhinnedittext.getText().toString()) + "\n" + "合計：" + sum + "円\n" + str2;
+                                    Calendar calendar = Calendar.getInstance();
+
+                                    int year,month,day,timehour,minits;
+
+                                    year = calendar.get(Calendar.YEAR);
+                                    month = calendar.get(Calendar.MONTH) + 1;
+                                    day = calendar.get(Calendar.DATE);
+                                    timehour = calendar.get(Calendar.HOUR);
+                                    minits = calendar.get(Calendar.MINUTE);
+
+                                    String inputday = "\n\n(保存日：" + year + "年" + month + "月" + day + "日" + timehour + "時" + minits + "分)";
+
+
+                                    String str3 = (shouhinnedittext.getText().toString()) + "\n" + "合計：" + sum + "円\n" + str2 + inputday;
 
                                     adapter.add(str3);
                                     insertItem(str3);

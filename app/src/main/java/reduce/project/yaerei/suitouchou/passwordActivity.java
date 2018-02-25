@@ -43,13 +43,40 @@ public class passwordActivity extends AppCompatActivity {
             finish();
          }
 
-        password = nyuuryoku = 0;
+        password = 0;
 
         sharedPreferences = getSharedPreferences("password", Context.MODE_PRIVATE);
         password = sharedPreferences.getInt("password",0);
 
         passwordtextView = (TextView)findViewById(R.id.passwordtextView);
         maru = "";
+
+    }
+
+    public void firstpassword(){
+
+        passwordtextView.setText("パスワードを入力してください。");
+        nyuuryoku = 0;
+
+    }
+
+    public void onResume(){
+        super.onResume();
+
+        //Activityclassが再び開かれた時
+        new AlertDialog.Builder(passwordActivity.this)
+                .setTitle("パスワード")
+                .setMessage("再度、パスワードを入力してください。")
+                .setPositiveButton(
+                        R.string.ryoukai,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                firstpassword();
+                            }
+                        }
+                ).show();
 
     }
 
@@ -72,7 +99,9 @@ public class passwordActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    shakkinnActivityintent();
+                                    intent = getIntent();
+                                    int t = intent.getIntExtra("backintent",0);
+                                    shakkinnActivityintent(t);
                                 }
                             }
                     ).show();
@@ -93,8 +122,19 @@ public class passwordActivity extends AppCompatActivity {
         }
     }
 
-    public void shakkinnActivityintent(){
-        intent = new Intent(this,shakkinnActivity.class);
+    public void shakkinnActivityintent(int getintent){
+
+        Class<?> cls;
+
+        if(getintent == 0){
+            //MainActivityに戻す
+            cls = MainActivity.class;
+        }else {
+            cls = shakkinnActivity.class;
+        }
+
+        intent = new Intent(this,cls);
+        intent.putExtra("kaijo",1);
         startActivity(intent);
         finish();
     }

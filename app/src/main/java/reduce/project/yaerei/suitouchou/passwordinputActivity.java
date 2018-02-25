@@ -1,9 +1,11 @@
 package reduce.project.yaerei.suitouchou;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -48,6 +50,28 @@ public class passwordinputActivity extends AppCompatActivity {
 
     public void inputpassword(View v){
         inputpasswordmethod(1);
+    }
+
+    public void onResume(){
+        super.onResume();
+
+        //Activityclassが再び開かれた時
+        new AlertDialog.Builder(passwordinputActivity.this)
+                .setTitle("初期化")
+                .setMessage("パスワードを初期化します。")
+                .setPositiveButton(
+                        R.string.ryoukai,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                password = 0;
+
+                            }
+                        }
+                ).show();
+
     }
 
     public void inputpasswordmethod(int judge){

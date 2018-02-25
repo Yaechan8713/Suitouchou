@@ -23,27 +23,88 @@ import java.util.List;
 
 public class peopleActivity extends AppCompatActivity {
 
-    ListView peoplelistView;
+    ListView peoplelistView,keishoulistView;
 
     Intent intent;
 
-    ArrayAdapter<String> adapter;
+    ArrayAdapter<String> adapter,keishouadapter;
 
-    EditText peopleeditText;
+    EditText peopleeditText,keishouedittext;
+
+    String keishoustr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.people_main);
 
+        keishoustr = "";
+
+        keishoulistView = (ListView)findViewById(R.id.keishoulistView);
+
+        keishouedittext = (EditText)findViewById(R.id.keishouedittext);
+
         peopleeditText = (EditText)findViewById(R.id.peopleedittext);
 
         peoplelistView = (ListView)findViewById(R.id.peoplelistView);
 
+        keishouadapter = new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_2);
+
         adapter = new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1);
 
 
+        keishoulistView.setAdapter(keishouadapter);
+
         peoplelistView.setAdapter(adapter);
+
+        keishoulistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final ArrayAdapter adapter2 = (ArrayAdapter)keishoulistView.getAdapter();
+
+                final String keishouitem = (String)adapter2.getItem(i);
+
+                new AlertDialog.Builder(peopleActivity.this)
+                        .setTitle("次の敬称を設定しますか？")
+                        .setMessage("敬称：" + keishouitem)
+                        .setPositiveButton(
+                                R.string.delete,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        keishoudeleteItem(keishouitem);
+
+                                        adapter2.remove(keishouitem);
+                                    }
+                                }
+                        )
+                        .setNegativeButton(
+                                R.string.settei,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        keishoustr = keishouitem;
+
+                                        Toast.makeText(peopleActivity.this, "敬称を「" + keishoustr + "」に設定しました。", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                        )
+                        .setNeutralButton(
+                                R.string.cancel,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        int t = 0;
+                                        t++;
+                                    }
+                                }
+                        ).show();
+            }
+        });
 
         peoplelistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -52,16 +113,24 @@ public class peopleActivity extends AppCompatActivity {
 
                 final String item = (String)adapter1.getItem(i);
 
+                String str;
+
+                if(keishoustr == ""){
+                    str = "なし";
+                }else{
+                    str = keishoustr;
+                }
+
                 new AlertDialog.Builder(peopleActivity.this)
                         .setTitle("次の人を借金差出人に登録しますか？")
-                        .setMessage(item)
+                        .setMessage(item + "\n" + str)
                         .setPositiveButton(
                                 "登録",
 
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        intentmethod(item);
+                                        intentmethod(item + keishoustr);
                                     }
                                 }
                         )
@@ -110,6 +179,12 @@ public class peopleActivity extends AppCompatActivity {
         });
 
 
+        List<keishouItem> keishouitems;
+        keishouitems = new Select().from(keishouItem.class).execute();
+        for(keishouItem item2 : keishouitems){
+            keishouadapter.insert(item2.keishouname,0);
+        }
+
         List<peopleItem> items;
         items = new Select().from(peopleItem.class).execute();
         for(peopleItem item : items){
@@ -123,11 +198,56 @@ public class peopleActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void keishouinput(View v){
+        keishoustr = keishouedittext.getText().toString();
+
+        new AlertDialog.Builder(peopleActivity.this)
+                .setTitle(R.string.kakunin)
+                .setMessage("次の敬称を登録しますか？\n敬称：" + keishoustr)
+                .setPositiveButton(
+                        R.string.touroku,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                keishouadapter.add(keishoustr);
+                                keishouinsertItem(keishoustr);
+                            }
+                        }
+                )
+                .setNeutralButton(
+                        R.string.cancel,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                keishoustr = "";
+                            }
+                        }
+                ).show();
+    }
 
 
 
 
 
+
+    public void keishouinsertItem(String keishouinsert){
+        keishouItem item = new keishouItem();
+        item.keishouname = keishouinsert;
+        item.save();
+    }
+
+    public void keishoudeleteItem(String keishoudelete){
+        keishouItem item = new keishouItem();
+        item = new Select().from(keishouItem.class).where("keishouname =?",keishoudelete).executeSingle();
+        item.delete();
+    }
+
+    public void keishounewint(String keishounewint){
+        keishouItem item = new keishouItem();
+        item = new Select().from(keishouItem.class).where("keishouname =?",keishounewint).executeSingle();
+    }
 
     public void insertItem(String insert){
 //        Itemクラスにデータ保存

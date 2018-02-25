@@ -6,11 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
 
-
     <application
         android:allowBackup="true"
         android:name="com.activeandroid.app.Application"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/suitouchou"
         android:label="@string/suitouchou"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -18,6 +17,7 @@
 
         <meta-data android:name="AA_DB_NAME" android:value="List.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="3" />
+
         <meta-data
             android:name="AA_MODELS"
             android:value="reduce.project.yaerei.Suitouchou.Item,

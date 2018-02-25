@@ -75,6 +75,8 @@ public class shakkinnActivity extends AppCompatActivity {
 
         edittext.setText("0");
 
+        passwurdmethod();
+
         listview.setAdapter(adapter);
 
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -231,6 +233,28 @@ public class shakkinnActivity extends AppCompatActivity {
     public void newint(String shakkinnnew){
         shakkinnItem item = new shakkinnItem();
         item = new Select().from(shakkinnItem.class).where("shakkinnname =?",shakkinnnew).executeSingle();
+    }
+
+
+    public void onResume(){
+        super.onResume();
+
+        passwurdmethod();
+    }
+
+    public void passwurdmethod(){
+
+        int kaijo = 0;
+
+        intent = getIntent();
+        kaijo = intent.getIntExtra("kaijo",0);
+
+
+        if(kaijo == 0) {
+            intent = new Intent(this, passwordActivity.class);
+            intent.putExtra("backintent", 1);
+            startActivity(intent);
+        }
     }
 
 }

@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         shouhinnedittext.setText("");
         moneyedit.setText("0");
 
+        passwurdmethod();
+
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -122,6 +124,27 @@ public class MainActivity extends AppCompatActivity {
         items = new Select().from(Item.class).execute();
         for(Item item:items){
             adapter.insert(item.name,0);
+        }
+    }
+
+    public void onResume(){
+        super.onResume();
+
+        passwurdmethod();
+    }
+
+    public void passwurdmethod(){
+
+        int kaijo = 0;
+
+        intent = getIntent();
+        kaijo = intent.getIntExtra("kaijo",0);
+
+
+        if(kaijo == 0) {
+            intent = new Intent(this, passwordActivity.class);
+            intent.putExtra("backintent", 0);
+            startActivity(intent);
         }
     }
 

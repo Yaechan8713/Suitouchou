@@ -10,31 +10,35 @@
         android:layout_weight="50" />
 
     <TextView
+        android:id="@+id/sumtextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/sumtextView"
         android:layout_weight="1"
         android:gravity="center"
         android:text="借金なし"
-        android:textSize="25dp"/>
+        android:textColor="@android:color/white"
+        android:textSize="25dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="horizontal">
+
         <TextView
+            android:id="@+id/peopletextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="とある人から"
-            android:id="@+id/peopletextView"
-            android:textSize="25dp"/>
+            android:textColor="@android:color/white"
+            android:textSize="25dp" />
 
         <EditText
             android:id="@+id/edittext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="50"
+            android:textColor="@android:color/white"
             android:textSize="25dp" />
 
         <TextView
@@ -42,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="円"
+            android:textColor="@android:color/white"
             android:textSize="25dp" />
     </LinearLayout>
 

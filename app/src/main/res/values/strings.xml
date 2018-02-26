@@ -6,7 +6,7 @@
     <string name="kakunin">確認</string>
     <string name="cancel">キャンセル</string>
     <string name="delete">削除</string>
-    <string name="main">お買い物出納帳</string>
+    <string name="main">出費記録　出納帳</string>
     <string name="shakkinn">借金出納帳</string>
     <string name="list">リスト表示</string>
     <string name="input">保存したリストを表示しております。\n\n</string>
@@ -16,6 +16,7 @@
     <string name="password">パスワード</string>
     <string name="people">借金差出人</string>
     <string name="passwordinput">パスワード設定</string>
+    <string name="kashidashi">借金貸出　出納帳</string>
 
     <string-array name="spn">
         <item>商品名：</item>

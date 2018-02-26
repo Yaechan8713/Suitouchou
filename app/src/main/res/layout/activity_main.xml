@@ -9,92 +9,243 @@
     tools:context="reduce.project.yaerei.suitouchou.MainActivity">
 
     <ListView
+        android:id="@+id/listview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="50"
-        android:id="@+id/listview" />
+        android:background="@android:color/holo_green_dark" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="円支出"
-        android:gravity="center"
         android:id="@+id/outorin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="25dp"/>
+        android:gravity="center"
+        android:text="支出なし"
+        android:textColor="@android:color/white"
+        android:textSize="50dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="1">
+        android:orientation="horizontal">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="金額："
-            android:textSize="25dp"
-            android:layout_weight="1"/>
+            android:orientation="vertical"
+            android:layout_weight="3">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/money"
-            android:textSize="25dp"
-            android:layout_weight="10"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/holo_blue_dark"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="円 "
-            android:textSize="25dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="金額："
+                    android:textColor="@android:color/white"
+                    android:textSize="25dp" />
 
-        <Button
+                <EditText
+                    android:id="@+id/money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:textColor="@android:color/white"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="円 "
+                    android:textColor="@android:color/white"
+                    android:textSize="25dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/holo_red_dark"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawSelectorOnTop="true"
+                    android:entries="@array/spn" />
+
+                <EditText
+                    android:id="@+id/shouhinnedittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="15"
+                    android:background="@android:color/holo_red_dark"
+                    android:textColor="@android:color/white"
+                    android:textSize="25dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#FFFCA0A0"
+                    android:onClick="shishutu"
+                    android:text="支出"
+                    android:textColor="@android:color/black"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_blue_bright"
+                    android:onClick="shuunyuu"
+                    android:text="収入"
+                    android:textColor="@android:color/black"
+                    android:textSize="25dp" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="借金出納帳を開く"
+                android:textSize="25dp"
+                android:onClick="lendmoney"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <!--
+
+        <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="25dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="支出"
-            android:onClick="shishutu"/>
+            android:background="@android:color/white">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="25dp"
-            android:layout_weight="1"
-            android:text="収入"
-            android:onClick="shuunyuu"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/holo_green_light"
+                    android:onClick="iccard"
+                    android:text="ICカード"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="?android:attr/colorPressedHighlight"
+                    android:onClick="kagu"
+                    android:text="家具"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/holo_red_dark"
+                    android:onClick="food"
+                    android:text="食品"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/holo_blue_bright"
+                    android:onClick="drink"
+                    android:text="飲み物"
+                    android:textColor="@android:color/black"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="#FFFFF540"
+                    android:onClick="kadenn"
+                    android:text="家電製品"
+                    android:textColor="@android:color/black"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/holo_orange_dark"
+                    android:onClick="irui"
+                    android:text="衣類"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="#FFFFDF75"
+                    android:onClick="sekkenn"
+                    android:text="石鹸"
+                    android:textColor="@android:color/black"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="#FFFFD4A7"
+                    android:onClick="hospital"
+                    android:text="医療関連"
+                    android:textColor="@android:color/black"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/holo_blue_dark"
+                    android:onClick="koutuu"
+                    android:text="交通費"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/darker_gray"
+                    android:onClick="sonota"
+                    android:text="その他"
+                    android:textSize="25dp" />
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        -->
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawSelectorOnTop="true"
-            android:entries="@array/spn"
-            android:layout_weight="1"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/shouhinnedittext"
-            android:textSize="25dp"
-            android:layout_weight="20"/>
-
-    </LinearLayout>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="借金出納帳を開く"
-        android:textSize="25dp"
-        android:onClick="lendmoney"
-        android:layout_weight="1"/>
 
 </LinearLayout>

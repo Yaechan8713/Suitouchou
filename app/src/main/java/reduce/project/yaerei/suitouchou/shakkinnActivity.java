@@ -57,10 +57,12 @@ public class shakkinnActivity extends AppCompatActivity {
 
         peopletextView = (TextView)findViewById(R.id.peopletextView);
 
-        people = "とある人";
-
         intent = getIntent();
         people = intent.getStringExtra("people");
+
+        if(people == null){
+            people = "とある人";
+        }
 
         String peoplekara = people + "から";
 

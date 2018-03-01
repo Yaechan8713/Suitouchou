@@ -15,11 +15,18 @@
     <string name="settei">設定</string>
     <string name="password">パスワード</string>
     <string name="people">借金差出人</string>
+    <string name="mainlisttitle">お買い物出納帳リストタイトル</string>
     <string name="passwordinput">パスワード設定</string>
     <string name="kashidashi">借金貸出　出納帳</string>
+    <string name="reset1">初期化</string>
+    <string name="repeatpassword">再度入力</string>
+    <string name="reset2">リセット</string>
+    <string name="pleasesettingspassword">8桁以下のパスワードを設定してください。</string>
 
     <string-array name="spn">
-        <item>商品名：</item>
+        <item>買った物の商品名：</item>
+        <item>サービス名：</item>
         <item>リストタイトル：</item>
+        <item>その他</item>
     </string-array>
 </resources>

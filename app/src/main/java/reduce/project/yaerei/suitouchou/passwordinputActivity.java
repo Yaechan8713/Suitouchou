@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by yaerei on 2018/02/24.
@@ -23,6 +24,8 @@ public class passwordinputActivity extends AppCompatActivity {
 
     int password;
 
+    String strpassword;
+
     String maru;
 
     Intent intent;
@@ -32,6 +35,8 @@ public class passwordinputActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.passwordinput_main);
 
+        strpassword = "パスワードは8桁以下にしてください。";
+
         passwordinputtextView = (TextView)findViewById(R.id.passwordinputtextView);
 
         maru = "";
@@ -39,13 +44,36 @@ public class passwordinputActivity extends AppCompatActivity {
         password = 0;
     }
 
-    public void passwordinput(int passwordinput){
+    public void passwordinput(int passwordinput) {
+
         maru = maru + "●";
-        passwordinputtextView.setText(maru);
+
+        if (maru == "") {
+            passwordinputtextView.setText(R.string.pleasesettingspassword);
+        } else {
+            passwordinputtextView.setText(maru + "\n");
+        }
 
         password = password * 10 + passwordinput;
 
-        inputpasswordmethod(2);
+        if (password > 99999999) {
+
+            new AlertDialog.Builder(passwordinputActivity.this)
+                    .setTitle(R.string.error)
+                    .setMessage(strpassword)
+                    .setPositiveButton(
+                            R.string.ryoukai,
+
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    reset();
+                                }
+                            }
+                    ).show();
+        } else {
+            inputpasswordmethod(2);
+        }
     }
 
     public void inputpassword(View v){
@@ -57,8 +85,8 @@ public class passwordinputActivity extends AppCompatActivity {
 
         //Activityclassが再び開かれた時
         new AlertDialog.Builder(passwordinputActivity.this)
-                .setTitle("初期化")
-                .setMessage("パスワードを初期化します。")
+                .setTitle("パスワード設定")
+                .setMessage("8桁以下のパスワードを設定してください。")
                 .setPositiveButton(
                         R.string.ryoukai,
 
@@ -66,12 +94,47 @@ public class passwordinputActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
-                                password = 0;
+                                reset();
 
                             }
                         }
                 ).show();
 
+    }
+
+    public void resetonclick(View v){
+        new AlertDialog.Builder(passwordinputActivity.this)
+                .setTitle("初期化")
+                .setMessage("パスワードを初期化しますか？")
+                .setPositiveButton(
+                        R.string.reset1,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                reset();
+                            }
+                        }
+                )
+                .setNeutralButton(
+                        R.string.cancel,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                int t = 0;
+                                t++;
+                            }
+                        }
+                ).show();
+    }
+
+    public void reset(){
+        maru = "";
+        password = 0;
+        passwordinputtextView.setText(R.string.pleasesettingspassword);
+
+        inputpasswordmethod(2);
     }
 
     public void inputpasswordmethod(int judge){
@@ -87,10 +150,47 @@ public class passwordinputActivity extends AppCompatActivity {
 
         //judge = 1の時はもとの画面に戻る
         if(judge == 1){
-            intent = new Intent(this,passwordActivity.class);
-            startActivity(intent);
-            finish();
+            if(password == 0){
+                new AlertDialog.Builder(passwordinputActivity.this)
+                        .setTitle(R.string.error)
+                        .setMessage("パスワードを設定してください。")
+                        .setPositiveButton(
+                                R.string.ryoukai,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        password = 0;
+                                    }
+                                }
+                        ).show();
+            }else {
+
+                new AlertDialog.Builder(passwordinputActivity.this)
+                        .setTitle("保存しました！")
+                        .setMessage("パスワードを保存しました！")
+                        .setPositiveButton(
+                                R.string.repeatpassword,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        inputintent();
+                                    }
+                                }
+                        ).show();
+            }
         }
+    }
+
+    public void inputintent(){
+        intent = new Intent(this, passwordActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void kakuninnpassword(View v){
+        Toast.makeText(passwordinputActivity.this, "パスワード：" + password, Toast.LENGTH_SHORT).show();
     }
 
 

@@ -54,7 +54,7 @@ public class passwordActivity extends AppCompatActivity {
     }
 
     public void firstpassword(){
-
+        maru = "";
         passwordtextView.setText("パスワードを入力してください。");
         nyuuryoku = 0;
 
@@ -83,7 +83,7 @@ public class passwordActivity extends AppCompatActivity {
     public void passwordrun(int passwordnyuuryoku){
         maru = maru + "●";
 
-        passwordtextView.setText(maru);
+        passwordtextView.setText(maru + "\n");
 
         nyuuryoku = nyuuryoku * 10 + passwordnyuuryoku;
     }
@@ -92,7 +92,7 @@ public class passwordActivity extends AppCompatActivity {
         if(password == nyuuryoku){
             new AlertDialog.Builder(passwordActivity.this)
                     .setTitle("ロック解除")
-                    .setMessage("ロックが解除されました。")
+                    .setMessage("ロックが解除されました！")
                     .setPositiveButton(
                             R.string.ok,
 
@@ -115,7 +115,7 @@ public class passwordActivity extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    nyuuryoku = 0;
+                                    firstpassword();
                                 }
                             }
                     ).show();

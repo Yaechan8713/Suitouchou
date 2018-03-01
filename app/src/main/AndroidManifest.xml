@@ -15,14 +15,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="AA_DB_NAME" android:value="List.db" />
-        <meta-data android:name="AA_DB_VERSION" android:value="3" />
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="Sample.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="1" />
 
         <meta-data
             android:name="AA_MODELS"
-            android:value="reduce.project.yaerei.Suitouchou.Item,
-            reduce.project.yaerei.Suitouchou.peopleItem,
-            reduce.project.yaerei.Suitouchou.shakkinnItem"/>
+            android:value="reduce.project.yaerei.suitouchou.Item,
+            reduce.project.yaerei.suitouchou.peopleItem,
+            reduce.project.yaerei.suitouchou.shakkinnItem,
+            reduce.project.yaerei.suitouchou.keishouItem,
+            reduce.project.yaerei.suitouchou.listtitleItem"/>
 
         <activity android:name=".MainActivity"
             android:label="@string/main">
@@ -32,6 +38,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".listtitleActivity"
+            android:label="@string/mainlisttitle"/>
 
         <activity android:name=".shakkinnActivity"
             android:label = "@string/shakkinn"/>

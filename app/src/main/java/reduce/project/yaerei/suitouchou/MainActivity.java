@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +25,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView outorin;
+    TextView outorin,listtitletextView;
 
     EditText moneyedit,shouhinnedittext;
 
     ListView listview;
+
+    String listtitlestring;
 
     Intent intent;
 
@@ -45,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        listtitlestring = "その他：";
+
+        listtitletextView = (TextView)findViewById(R.id.listtitletextView);
+
+        listtitletextView.setText(listtitlestring);
+
         outorin = (TextView)findViewById(R.id.outorin);
 
         moneyedit = (EditText)findViewById(R.id.money);
@@ -57,11 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1);
 
-        spf = getSharedPreferences("sum", Context.MODE_PRIVATE);
-        sum = spf.getInt("sum",0);
-
-        shouhinnedittext.setText("");
-        moneyedit.setText("0");
+        listtitlemethod();
 
         passwurdmethod();
 
@@ -76,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle(R.string.list)
-                        .setMessage(R.string.input + item)
+                        .setMessage("保存したリストを表示しております。\n\n" + item)
                         .setNegativeButton(
                                 R.string.kakunin,
 
@@ -132,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         passwurdmethod();
+
+        listtitlemethod();
     }
 
     public void passwurdmethod(){
@@ -160,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
 //    int i = 1の時は支出
 //    int i = 0は収入
-    public void run(int i) {
+    public void run(final int ii) {
 
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.kakunin)
@@ -219,23 +226,36 @@ public class MainActivity extends AppCompatActivity {
                                     String str, str2;
                                     str = str2 = "";
 
+                                    String shuunyuustring = "";
+
                                     if (inport == 0) {
                                         //EditText moneyeditで入力した値が0の場合
-                                        str = "支出なし。収入なし。";
+                                        str = "支出・収入なし。";
+                                        str2 = shuunyuustring = str;
                                     } else {
+
+                                        int sumstring = 0;
+
                                         //EditText moneyeditで入力した値が0ではない場合
-                                        if (i == 1) {
+                                        if (ii == 1) {
                                             //支出計算
-                                            sum = sum + inport;
+                                            sumstring = sum = sum + inport;
                                             str = "円支出";
                                         } else {
                                             //収入計算
                                             sum = sum - inport;
                                             str = "円収入";
                                         }
+                                        str2 = inport + str;
+
+                                        shuunyuustring =  sumstring + str + "を入力";
                                     }
-                                    str2 = inport + str;
-                                    outorin.setText(str2);
+
+                                    if(inport == 0){
+                                        outorin.setText(str);
+                                    }else {
+                                        outorin.setText(str2);
+                                    }
 
                                     Calendar calendar = Calendar.getInstance();
 
@@ -247,18 +267,22 @@ public class MainActivity extends AppCompatActivity {
                                     timehour = calendar.get(Calendar.HOUR);
                                     minits = calendar.get(Calendar.MINUTE);
 
-                                    String inputday = "\n\n(保存日：" + year + "年" + month + "月" + day + "日" + timehour + "時" + minits + "分)";
+                                    String inputday = "\n(保存日：" + year + "年" + month + "月" + day + "日" + timehour + "時" + minits + "分)";
 
-
-                                    String str3 = (shouhinnedittext.getText().toString()) + "\n" + "合計：" + sum + "円\n" + str2 + inputday;
+                                    String str3 = (listtitlestring + shouhinnedittext.getText().toString()) + "\n" + "合計：" + shuunyuustring +"(" + str2 + ")" + inputday;
 
                                     adapter.add(str3);
                                     insertItem(str3);
 
-                                    spf = getSharedPreferences("sum",Context.MODE_PRIVATE);
+                                    spf = getSharedPreferences("mainsum",Context.MODE_PRIVATE);
                                     editor = spf.edit();
-                                    editor.putInt("sum",sum);
+                                    editor.putInt("mainsum",sum);
                                     editor.commit();
+
+                                    inport = 0;
+
+                                    shouhinnedittext.setText("");
+                                    moneyedit.setText(inport + "");
                                 }
                             }
                         })
@@ -301,5 +325,30 @@ public class MainActivity extends AppCompatActivity {
         intent = new Intent(this,shakkinnActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void listtitlesettei(View v){
+        intent = new Intent(this,listtitleActivity.class);
+        startActivity(intent);
+    }
+
+    public void listtitlemethod(){
+
+        spf = getSharedPreferences("listtitle",Context.MODE_PRIVATE);
+        listtitlestring = spf.getString("listtitle","");
+
+        if(listtitlestring == ""){
+            listtitlestring = "その他：";
+        }
+
+        spf = getSharedPreferences("mainsum", Context.MODE_PRIVATE);
+        sum = spf.getInt("mainsum",0);
+
+        outorin.setText("入力なし");
+
+        shouhinnedittext.setText("");
+        moneyedit.setText("0");
+
+
     }
 }

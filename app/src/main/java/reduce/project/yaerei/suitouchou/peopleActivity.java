@@ -1,16 +1,20 @@
 package reduce.project.yaerei.suitouchou;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
@@ -27,11 +31,17 @@ public class peopleActivity extends AppCompatActivity {
 
     Intent intent;
 
+    SharedPreferences spr;
+
+    SharedPreferences.Editor editor;
+
     ArrayAdapter<String> adapter,keishouadapter;
 
     EditText peopleeditText,keishouedittext;
 
-    String keishoustr;
+    String keishoustr,peoplestr;
+
+    TextView peopletextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +50,20 @@ public class peopleActivity extends AppCompatActivity {
 
         keishoustr = "";
 
+        spr = getSharedPreferences("peoplename",Context.MODE_PRIVATE);
+        peoplestr = spr.getString("peoplename","");
+
+        spr = getSharedPreferences("keishouname",Context.MODE_PRIVATE);
+        keishoustr = spr.getString("keishouname","");
+
+        if(peoplestr == "" || peoplestr == null) {
+
+            peoplestr = "とある人";
+        }
+
         keishoulistView = (ListView)findViewById(R.id.keishoulistView);
+
+        peopletextView = (TextView)findViewById(R.id.peopletextView);
 
         keishouedittext = (EditText)findViewById(R.id.keishouedittext);
 
@@ -48,9 +71,15 @@ public class peopleActivity extends AppCompatActivity {
 
         peoplelistView = (ListView)findViewById(R.id.peoplelistView);
 
-        keishouadapter = new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_2);
+        Context ct = this;
 
-        adapter = new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1);
+        int rsc = android.R.layout.simple_expandable_list_item_1;
+
+        keishouadapter = new ArrayAdapter(ct,rsc);
+
+        adapter = new ArrayAdapter(ct,rsc);
+
+        peopletextViewmethod(peoplestr,keishoustr);
 
 
         keishoulistView.setAdapter(keishouadapter);
@@ -64,10 +93,12 @@ public class peopleActivity extends AppCompatActivity {
 
                 final String keishouitem = (String)adapter2.getItem(i);
 
+                keishoustr = keishouitem;
+
                 new AlertDialog.Builder(peopleActivity.this)
                         .setTitle("次の敬称を設定しますか？")
                         .setMessage("敬称：" + keishouitem)
-                        .setPositiveButton(
+                        .setNegativeButton(
                                 R.string.delete,
 
                                 new DialogInterface.OnClickListener() {
@@ -77,17 +108,19 @@ public class peopleActivity extends AppCompatActivity {
                                         keishoudeleteItem(keishouitem);
 
                                         adapter2.remove(keishouitem);
+
+
                                     }
                                 }
                         )
-                        .setNegativeButton(
+                        .setPositiveButton(
                                 R.string.settei,
 
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         keishoustr = keishouitem;
-
+                                        peopletextViewmethod(peoplestr,keishouitem);
                                         Toast.makeText(peopleActivity.this, "敬称を「" + keishoustr + "」に設定しました。", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -113,28 +146,28 @@ public class peopleActivity extends AppCompatActivity {
 
                 final String item = (String)adapter1.getItem(i);
 
-                String str;
-
-                if(keishoustr == ""){
-                    str = "なし";
-                }else{
-                    str = keishoustr;
-                }
+                peoplestr = item;
 
                 new AlertDialog.Builder(peopleActivity.this)
                         .setTitle("次の人を借金差出人に登録しますか？")
-                        .setMessage(item + "\n" + str)
+                        .setMessage(item)
                         .setPositiveButton(
                                 "登録",
 
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
+                                        if(keishoustr == null || keishoustr == ""){
+                                            keishoustr = "さん";
+                                        }
+
+                                        peopletextViewmethod(item,keishoustr);
+
                                         intentmethod(item + keishoustr);
                                     }
                                 }
                         )
-                        .setNegativeButton(
+                        .setNeutralButton(
                                 R.string.cancel,
 
                                 new DialogInterface.OnClickListener() {
@@ -145,7 +178,7 @@ public class peopleActivity extends AppCompatActivity {
                                     }
                                 }
                         )
-                        .setNeutralButton(
+                        .setNegativeButton(
                                 R.string.delete,
 
                                 new DialogInterface.OnClickListener() {
@@ -193,9 +226,39 @@ public class peopleActivity extends AppCompatActivity {
     }
 
     public void intentmethod(String str){
+
+        spr = getSharedPreferences("people",Context.MODE_PRIVATE);
+        editor = spr.edit();
+        editor.putString("people",str);
+        editor.commit();
+
+
         intent = new Intent(this,shakkinnActivity.class);
-        intent.putExtra("people",str);
         startActivity(intent);
+        finish();
+    }
+
+    public void peopletextViewmethod(String peoplename,String keishouname){
+        String sprstr1 = "";
+        String sprstr2 = "";
+        int i = 0;
+        for(i = 0;i < 2;i++){
+            if(i == 0){
+                sprstr1 = "peoplename";
+                sprstr2 = peoplename;
+            }else{
+                sprstr1 = "keishouname";
+                sprstr2 = keishouname;
+            }
+
+            spr = getSharedPreferences(sprstr1,Context.MODE_PRIVATE);
+            editor = spr.edit();
+            editor.putString(sprstr1,sprstr2);
+            editor.commit();
+        }
+
+        peopletextView.setText("差出人：" + peoplename + keishouname);
+
     }
 
     public void keishouinput(View v){
@@ -212,6 +275,7 @@ public class peopleActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 keishouadapter.add(keishoustr);
                                 keishouinsertItem(keishoustr);
+                                keishouedittext.setText("");
                             }
                         }
                 )
@@ -269,10 +333,70 @@ public class peopleActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e){
+//        戻るボタンがクリックされた時の処理
+        if(e.getKeyCode() == KeyEvent.KEYCODE_BACK){
+            intent = new Intent(this,shakkinnActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        return super.dispatchKeyEvent(e);
+    }
 
-    public void input(View v){
-        String item = peopleeditText.getText().toString();
-        adapter.add(item);
-        insertItem(item);
+
+    public void input(View v) {
+        final String item = peopleeditText.getText().toString();
+
+        if (item == null || item == "") {
+            new AlertDialog.Builder(peopleActivity.this)
+                    .setTitle("エラー")
+                    .setMessage("差出人が入力されていません。")
+                    .setPositiveButton(
+                            R.string.ryoukai,
+
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    int t = 0;
+                                    t++;
+                                }
+                            }
+                    ).show();
+        } else {
+
+            if (keishoustr == "" || keishoustr == null) {
+                keishoustr = "さん";
+            }
+
+            new AlertDialog.Builder(peopleActivity.this)
+                    .setTitle(R.string.kakunin)
+                    .setMessage("次の人を差出人リスト登録しますか？\n" + item + keishoustr)
+                    .setPositiveButton(
+                            R.string.touroku,
+
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    adapter.add(item);
+                                    insertItem(item);
+
+                                }
+                            }
+                    )
+                    .setNegativeButton(
+                            R.string.cancel,
+
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    int t = 0;
+                                    t++;
+                                }
+                            }
+                    ).show();
+
+            peopleeditText.setText("");
+        }
     }
 }

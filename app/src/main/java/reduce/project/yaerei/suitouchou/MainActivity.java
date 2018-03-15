@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     Intent intent;
 
-    int sum,inport;
+    int sum,inport,edittextnum;
 
     SharedPreferences spf;
 
@@ -48,11 +48,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listtitlestring = "その他：";
-
         listtitletextView = (TextView)findViewById(R.id.listtitletextView);
-
-        listtitletextView.setText(listtitlestring);
 
         outorin = (TextView)findViewById(R.id.outorin);
 
@@ -62,13 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
         shouhinnedittext = (EditText)findViewById(R.id.shouhinnedittext);
 
-        inport = sum = 0;
+        inport = edittextnum = sum = 0;
 
         adapter = new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1);
 
         listtitlemethod();
-
-        passwurdmethod();
 
         listview.setAdapter(adapter);
 
@@ -105,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         adapter.remove(item);
 
-                                        Toast.makeText(MainActivity.this, "項目を削除しました。", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "項目を削除しました。(合計金額は変更していません) ", Toast.LENGTH_SHORT).show();
 
                                     }
                                 }
@@ -135,8 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onResume(){
         super.onResume();
-
-        passwurdmethod();
 
         listtitlemethod();
     }
@@ -171,9 +163,9 @@ public class MainActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(MainActivity.this)
                 .setTitle(R.string.kakunin)
-                .setMessage("リストデータを保存します。")
+                .setMessage("リストデータを保存しますか？")
                 .setNegativeButton(
-                        R.string.ryoukai,
+                        R.string.input2,
 
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -221,7 +213,11 @@ public class MainActivity extends AppCompatActivity {
                                                 ).show();
                                     } else {
                                         //支出・収入の金額が入力されている場合
+                                        if(moneyedit.getText().toString().equals("")){
+                                            inport = 0;
+                                        }
                                         inport = Integer.valueOf(moneyedit.getText().toString());
+
                                     }
                                     String str, str2;
                                     str = str2 = "";
@@ -230,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     if (inport == 0) {
                                         //EditText moneyeditで入力した値が0の場合
-                                        str = "支出・収入なし。";
+                                        str = "支出・収入なし";
                                         str2 = shuunyuustring = str;
                                     } else {
 
@@ -246,9 +242,24 @@ public class MainActivity extends AppCompatActivity {
                                             sum = sum - inport;
                                             str = "円収入";
                                         }
-                                        str2 = inport + str;
 
-                                        shuunyuustring =  sumstring + str + "を入力";
+                                        String sumstr = "";
+
+                                        if(sum < 0) {
+                                            sumstring = sum * -1;
+                                            sumstr = "円収入";
+                                        }else{
+                                            sumstring = sum;
+                                            sumstr = "円支出";
+                                        }
+
+                                        str2 = inport + str + "を入力";
+
+                                        shuunyuustring =  sumstring + sumstr;
+
+                                        if(sum == 0){
+                                            shuunyuustring = "支出・収入なし";
+                                        }
                                     }
 
                                     if(inport == 0){
@@ -259,30 +270,68 @@ public class MainActivity extends AppCompatActivity {
 
                                     Calendar calendar = Calendar.getInstance();
 
-                                    int year,month,day,timehour,minits;
+                                    int year,month,day,timehour,minits,s;
 
                                     year = calendar.get(Calendar.YEAR);
                                     month = calendar.get(Calendar.MONTH) + 1;
                                     day = calendar.get(Calendar.DATE);
-                                    timehour = calendar.get(Calendar.HOUR);
+                                    timehour = calendar.get(Calendar.HOUR_OF_DAY);
                                     minits = calendar.get(Calendar.MINUTE);
+                                    s = calendar.get(Calendar.SECOND);
 
-                                    String inputday = "\n(保存日：" + year + "年" + month + "月" + day + "日" + timehour + "時" + minits + "分)";
+                                    String inputday = "\n(保存日：" + year + "年" + month + "月" + day + "日" + timehour + "時" + minits + "分" + s +"秒)";
 
-                                    String str3 = (listtitlestring + shouhinnedittext.getText().toString()) + "\n" + "合計：" + shuunyuustring +"(" + str2 + ")" + inputday;
+                                    String str3 = (listtitlestring + "：" + shouhinnedittext.getText().toString()) + "\n" + "合計：" + shuunyuustring +"(" + str2 + ")" + inputday;
 
-                                    adapter.add(str3);
-                                    insertItem(str3);
+                                    final String finalstr = str3;
 
-                                    spf = getSharedPreferences("mainsum",Context.MODE_PRIVATE);
-                                    editor = spf.edit();
-                                    editor.putInt("mainsum",sum);
-                                    editor.commit();
-
-                                    inport = 0;
+                                    edittextnum = 0;
 
                                     shouhinnedittext.setText("");
-                                    moneyedit.setText(inport + "");
+                                    moneyedit.setText(edittextnum + "");
+
+                                    if (ii == 1) {
+                                        sum = sum - inport;
+                                    }else{
+                                        sum = sum + inport;
+                                    }
+
+
+                                    new AlertDialog.Builder(MainActivity.this)
+                                            .setTitle(R.string.kakunin)
+                                            .setMessage("保存するリストの内容は以下の通りでよろしいですか？\n\n" + finalstr)
+                                            .setPositiveButton(
+                                                    R.string.ok,
+
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                            adapter.add(finalstr);
+                                                            insertItem(finalstr);
+
+                                                            if(ii == 1){
+                                                                sum = sum + inport;
+                                                            }else{
+                                                                sum = sum - inport;
+                                                            }
+
+                                                            edittextnum = 1;
+
+                                                        }
+                                                    }
+                                            )
+                                            .setNeutralButton(
+                                                    R.string.cancel,
+
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            int t = 0;
+                                                            t++;
+                                                        }
+                                                    }
+                                            ).show();
                                 }
                             }
                         })
@@ -297,9 +346,32 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                 ).show();
+        spf = getSharedPreferences("mainsum",Context.MODE_PRIVATE);
+        editor = spf.edit();
+        editor.putInt("mainsum",sum);
+        editor.commit();
+        inport = 0;
     }
 
 
+
+    public void sumtoast(View v){
+        int toastnum = 0;
+        String toaststring = "";
+        if(sum > 0){
+            toastnum = sum;
+            toaststring = "支出";
+        }else if(sum == 0){
+            toastnum = sum;
+            toaststring = "(支出・収入なし)";
+        }else{
+            toaststring = "収入";
+            toastnum = sum * -1;
+        }
+
+
+        Toast.makeText(MainActivity.this, "合計金額：" + toastnum + "円" + toaststring, Toast.LENGTH_SHORT).show();
+    }
 
 
     public void insertItem(String insert){
@@ -328,27 +400,69 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void listtitlesettei(View v){
-        intent = new Intent(this,listtitleActivity.class);
-        startActivity(intent);
+        listtitlesetteimethod();
     }
 
     public void listtitlemethod(){
 
+        passwurdmethod();
+
         spf = getSharedPreferences("listtitle",Context.MODE_PRIVATE);
         listtitlestring = spf.getString("listtitle","");
 
-        if(listtitlestring == ""){
-            listtitlestring = "その他：";
+        if(listtitlestring == "" || listtitlestring == null){
+
+            listtitlestring = "その他";
+
         }
+
+        listtitletextView.setText(listtitlestring + "：");
+
 
         spf = getSharedPreferences("mainsum", Context.MODE_PRIVATE);
         sum = spf.getInt("mainsum",0);
 
-        outorin.setText("入力なし");
+        outorin.setText("入力データなし");
 
         shouhinnedittext.setText("");
         moneyedit.setText("0");
 
 
+    }
+
+    public void listtitletextView(View v){
+        listtitlesetteimethod();
+    }
+
+    public void listtitlesetteimethod(){
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle(R.string.kakunin)
+                .setMessage("リストタイトルを設定しますか？")
+                .setPositiveButton(
+                        R.string.ok,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                listtitleActivitymethodintent();
+                            }
+                        }
+                )
+                .setNeutralButton(
+                        R.string.cancel,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                int t = 0;
+                                t++;
+                            }
+                        }
+                ).show();
+    }
+
+    public void listtitleActivitymethodintent(){
+        intent = new Intent(this,listtitleActivity.class);
+        startActivity(intent);
     }
 }

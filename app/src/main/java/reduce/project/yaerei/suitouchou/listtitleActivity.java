@@ -72,7 +72,7 @@ public class listtitleActivity extends AppCompatActivity {
 
                 final String item = (String) listadapter.getItem(i);
 
-                intentmethod(item);
+                intentmethod(item,listadapter);
             }
         });
 
@@ -93,7 +93,8 @@ public class listtitleActivity extends AppCompatActivity {
 
     }
 
-    public void intentmethod(final String intentstring) {
+    public void intentmethod(final String intentstring,final ArrayAdapter adapter2) {
+
         new AlertDialog.Builder(listtitleActivity.this)
                 .setTitle("リストタイトル設定")
                 .setMessage("「" + intentstring + "」をリストタイトルに設定しますか？")
@@ -112,17 +113,17 @@ public class listtitleActivity extends AppCompatActivity {
 
                                 mainActivityintent();
                             }
-
                         }
                 )
                 .setNeutralButton(
-                        R.string.cancel,
+                        R.string.delete,
 
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                int t = 0;
-                                t++;
+                                deleteItem(intentstring);
+
+                                adapter2.remove(intentstring);
                             }
                         }
                 ).show();
@@ -148,7 +149,7 @@ public class listtitleActivity extends AppCompatActivity {
                 .setTitle(R.string.kakunin)
                 .setMessage("「" + intentstr + "」を保存しますか？")
                 .setPositiveButton(
-                        R.string.input,
+                        "保存",
 
                         new DialogInterface.OnClickListener() {
                             @Override

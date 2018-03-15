@@ -5,10 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by yaerei on 2018/02/24.
@@ -86,6 +88,36 @@ public class passwordActivity extends AppCompatActivity {
         passwordtextView.setText(maru + "\n");
 
         nyuuryoku = nyuuryoku * 10 + passwordnyuuryoku;
+    }
+
+    public void reset(View v){
+        new AlertDialog.Builder(passwordActivity.this)
+                .setTitle(R.string.kakunin)
+                .setMessage("パスワードを再度入力しますか？")
+                .setPositiveButton(
+                        R.string.repeatpassword,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                firstpassword();
+                            }
+                        }
+                ).setNeutralButton(
+                R.string.cancel,
+
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int t = 0;
+                        t++;
+                    }
+                }
+        ).show();
+    }
+
+    public void kakuninn(View v){
+        Toast.makeText(passwordActivity.this, "パスワード：" + nyuuryoku, Toast.LENGTH_SHORT).show();
     }
 
     public void ok(View v){

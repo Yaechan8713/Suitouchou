@@ -9,6 +9,7 @@
     <string name="main">出費記録　出納帳</string>
     <string name="shakkinn">借金出納帳</string>
     <string name="list">リスト表示</string>
+    <string name="input2">保存</string>
     <string name="input">保存したリストを表示しております。\n\n</string>
     <string name="ok">OK</string>
     <string name="touroku">登録</string>
@@ -24,9 +25,9 @@
     <string name="pleasesettingspassword">8桁以下のパスワードを設定してください。</string>
 
     <string-array name="spn">
-        <item>買った物の商品名：</item>
-        <item>サービス名：</item>
-        <item>リストタイトル：</item>
+        <item>買った物の商品名</item>
+        <item>サービス名</item>
+        <item>リストタイトル</item>
         <item>その他</item>
     </string-array>
 </resources>

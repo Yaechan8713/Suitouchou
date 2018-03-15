@@ -34,11 +34,16 @@ public class shakkinnActivity extends AppCompatActivity {
 
     TextView sumtextView,peopletextView;
 
-    SharedPreferences spr;
+    SharedPreferences spr,peoplespr;
+
+    String peoplekara;
 
     SharedPreferences.Editor editor;
 
     Intent intent;
+
+    //        int edittextnum = 0の時はedittextに金額を表示。それ以外の時は金額を表示しない。
+    int edittextnum;
 
     EditText edittext;
 
@@ -57,14 +62,18 @@ public class shakkinnActivity extends AppCompatActivity {
 
         peopletextView = (TextView)findViewById(R.id.peopletextView);
 
-        intent = getIntent();
-        people = intent.getStringExtra("people");
+        edittextnum = 0;
 
-        if(people == null){
+        people = "";
+
+        peoplespr = getSharedPreferences("people",Context.MODE_PRIVATE);
+        people = peoplespr.getString("people","");
+
+        if(people == null || people == ""){
             people = "とある人";
         }
 
-        String peoplekara = people + "から";
+        peoplekara = people + "から";
 
         peopletextView.setText(peoplekara);
 
@@ -151,7 +160,7 @@ public class shakkinnActivity extends AppCompatActivity {
 
 
 
-    public void lendrun(int t){
+    public void lendrun(final int t){
         if(TextUtils.isEmpty(edittext.getText())){
             new AlertDialog.Builder(shakkinnActivity.this)
                     .setTitle(R.string.error)
@@ -168,6 +177,9 @@ public class shakkinnActivity extends AppCompatActivity {
 
                     ).show();
         }else{
+            if(edittext.getText().toString().equals("")){
+                input = 0;
+            }
             input = Integer.valueOf(edittext.getText().toString());
         }
 
@@ -175,38 +187,124 @@ public class shakkinnActivity extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
 
-        int year,month,day,timehour,minits;
+        int year,month,day,timehour,minits,s;
 
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH) + 1;
         day = calendar.get(Calendar.DATE);
         timehour = calendar.get(Calendar.HOUR);
         minits = calendar.get(Calendar.MINUTE);
+        s = calendar.get(Calendar.SECOND);
 
-        String inputday = "\n\n(保存日：" + year + "年" + month + "月" + day + "日" + timehour + "時" + minits + "分)";
+        String inputday = "\n(保存日：" + year + "年" + month + "月" + day + "日" + timehour + "時" + minits + "分" + s +"秒)";
         String str = "";
 
         if(t == 0){
             sum = sum - input;
             str1 = input + "円返金";
 
-            str = str1;
+            str = input + "円の返金";
         }else{
             sum = sum + input;
             str1 = input + "円借りた";
 
-            str = input + "円借金";
+            str = input + "円の借金";
         }
 
-        sumtextView.setText(str);
+        str = str + "を入力";
 
-        String hyojistr = "借金：" + sum + "円\n" + str1 + inputday;
-        adapter.add(hyojistr);
-        insertItem(hyojistr);
+        String str2 = "入力内容：" + peoplekara +  str1 + inputday;
+
+        String str3 = str;
+
+        if(input == 0){
+            str3 = "借金・返金の入力なし";
+            str = "入力内容：" + str3;
+            str2 = str + inputday;
+        }
+
+        sumtextView.setText(str3);
+
+        String hyojistr1;
+        hyojistr1 = "";
+
+        int sumhyoji = 0;
+
+        String sumstring = "の合計";
+
+        if(sum >= 0){
+            hyojistr1 = "借金" + sumstring + "：";
+            sumhyoji = sum;
+        }else{
+            hyojistr1 = "返金" + sumstring +"：";
+            sumhyoji = sum * -1;
+        }
+
+        String hyojistr3 = hyojistr1 + sumhyoji + "円";
+
+        if(sum == 0){
+            hyojistr3 = "合計：借金・返金なし";
+        }
+
+        final String hyojistr2 = hyojistr3 + "\n" + str2;
+
+        edittextnum = 0;
+
+        edittext.setText(edittextnum + "");
+
+
+        if (t == 0) {
+            sum = sum + input;
+        } else {
+            sum = sum - input;
+        }
+
+        new AlertDialog.Builder(shakkinnActivity.this)
+                .setTitle(R.string.kakunin)
+                .setMessage("以下の内容でリストを保存しますか？\n\n" + hyojistr2)
+                .setPositiveButton(
+                        R.string.input2,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                adapter.add(hyojistr2);
+                                insertItem(hyojistr2);
+
+
+                                if(t == 0){
+                                    sum = sum - input;
+                                }else{
+                                    sum = sum + input;
+                                }
+
+                                edittextnum = 1;
+
+                                editor = spr.edit();
+                                editor.putInt("shakkinnsum",sum);
+                                editor.commit();
+
+                            }
+                        }
+                )
+                .setNeutralButton(
+                        R.string.cancel,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                int t = 0;
+                                t++;
+                            }
+                        }
+                ).show();
 
         editor = spr.edit();
-        editor.putInt("shakkinnsum",0);
+        editor.putInt("shakkinnsum",sum);
         editor.commit();
+
+//        input = 0;
 
     }
 
@@ -259,4 +357,47 @@ public class shakkinnActivity extends AppCompatActivity {
         }
     }
 
+    public void forpepole(View v){
+        shakkinnpeopleintent();
+    }
+
+    public void peopletextView(View v){
+        shakkinnpeopleintent();
+    }
+
+    public void shakkinnpeopleintent(){
+
+        new AlertDialog.Builder(shakkinnActivity.this)
+                .setTitle(R.string.kakunin)
+                .setMessage("借金の差出人を設定しますか？")
+                .setPositiveButton(
+                        R.string.settei,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                peopleintent();
+                            }
+                        }
+                )
+                .setNegativeButton(
+                        R.string.cancel,
+
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                int t = 0;
+                                t++;
+                            }
+                        }
+                ).show();
+    }
+
+
+    public void peopleintent() {
+
+        intent = new Intent(this, peopleActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

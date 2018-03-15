@@ -84,6 +84,7 @@
                     android:textSize="25dp"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_horizontal"
+                    android:onClick="listtitletextView"
                     android:textColor="@android:color/white"
                     android:text="リストタイトル："/>
 
@@ -110,6 +111,16 @@
                     android:background="#FFFCA0A0"
                     android:onClick="shishutu"
                     android:text="支出"
+                    android:textColor="@android:color/black"
+                    android:textSize="25dp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_green_light"
+                    android:onClick="sumtoast"
+                    android:text="合計金額確認"
                     android:textColor="@android:color/black"
                     android:textSize="25dp" />
 

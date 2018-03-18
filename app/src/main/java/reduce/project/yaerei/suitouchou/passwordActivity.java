@@ -117,7 +117,7 @@ public class passwordActivity extends AppCompatActivity {
     }
 
     public void kakuninn(View v){
-        Toast.makeText(passwordActivity.this, "パスワード：" + nyuuryoku, Toast.LENGTH_SHORT).show();
+        Toast.makeText(passwordActivity.this, "入力したパスワード：" + nyuuryoku, Toast.LENGTH_SHORT).show();
     }
 
     public void ok(View v){
@@ -164,6 +164,11 @@ public class passwordActivity extends AppCompatActivity {
         }else {
             cls = shakkinnActivity.class;
         }
+
+        sharedPreferences = getSharedPreferences("passwordlock",Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.putInt("passwordlock",1);
+        editor.commit();
 
         intent = new Intent(this,cls);
         intent.putExtra("kaijo",1);

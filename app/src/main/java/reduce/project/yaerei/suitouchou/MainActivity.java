@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
     EditText moneyedit,shouhinnedittext;
 
-    ListView listview;
+    ListView listview,tekiyoulistview;
 
-    String listtitlestring;
+    String listtitlestring,editstr2;
 
     Intent intent;
 
@@ -43,12 +43,16 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayAdapter<String> adapter;
 
+    ArrayAdapter<String> adapter2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         listtitletextView = (TextView)findViewById(R.id.listtitletextView);
+
+        tekiyoulistview = (ListView)findViewById(R.id.tekiyoulistview);
 
         outorin = (TextView)findViewById(R.id.outorin);
 
@@ -62,9 +66,113 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1);
 
+        adapter2 = new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1);
+
         listtitlemethod();
 
+        final String itemkakuninntitle = "メモした摘要内容　確認";
+        final String itemkakuninnmessage = "メモした摘要の内容を表示しています。摘要の内容を以下のワードに設定するときは「設定」を押してください。\n\n";
+
         listview.setAdapter(adapter);
+        tekiyoulistview.setAdapter(adapter2);
+
+        tekiyoulistview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                final ArrayAdapter adapter = (ArrayAdapter)tekiyoulistview.getAdapter();
+
+                final String item = (String)adapter.getItem(i);
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(itemkakuninntitle)
+                        .setMessage(itemkakuninnmessage + item)
+                        .setPositiveButton(
+                                R.string.kakunin,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        int t = 0;
+                                        t++;
+                                    }
+                                }
+                        )
+                        .setNeutralButton(
+                                R.string.worddelete,
+
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        listworddeleteItem(item);
+                                    }
+                                }
+                        )
+                        .setNegativeButton(
+                                R.string.settei,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        shouhinnedittext.setText(item);
+                                    }
+
+                                }
+
+                        ).show();
+
+                return false;
+            }
+        });
+
+        tekiyoulistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final ArrayAdapter adapter = (ArrayAdapter)tekiyoulistview.getAdapter();
+
+                final String item = (String)adapter.getItem(i);
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(itemkakuninntitle)
+                        .setMessage(itemkakuninnmessage + item)
+                        .setPositiveButton(
+                                R.string.kakunin,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        int t = 0;
+                                        t++;
+                                    }
+                                }
+                        )
+                        .setNeutralButton(
+                                R.string.worddelete,
+
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        listworddeleteItem(item);
+                                    }
+                                }
+                        )
+                        .setNegativeButton(
+                                R.string.settei,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        shouhinnedittext.setText(item);
+                                    }
+
+                                }
+
+                        ).show();
+
+            }
+        });
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -99,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         adapter.remove(item);
 
-                                        Toast.makeText(MainActivity.this, "項目を削除しました。(合計金額は変更していません) ", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this,R.string.deleted, Toast.LENGTH_SHORT).show();
 
                                     }
                                 }
@@ -110,10 +218,41 @@ public class MainActivity extends AppCompatActivity {
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ArrayAdapter adapter = (ArrayAdapter)listview.getAdapter();
+                final ArrayAdapter adapter = (ArrayAdapter)listview.getAdapter();
 
                 final String item = (String)adapter.getItem(i);
-                adapter.insert(item,i);
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.list)
+                        .setMessage("保存したリストを表示しております。\n\n" + item)
+                        .setNegativeButton(
+                                R.string.kakunin,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        int t = 0;
+                                        t++;
+                                        t = 0;
+                                    }
+                                }
+                        )
+                        .setNeutralButton(
+                                R.string.delete,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        deleteItem(item);
+
+                                        adapter.remove(item);
+
+                                        Toast.makeText(MainActivity.this,R.string.deleted, Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                        ).show();
 
                 return false;
             }
@@ -125,6 +264,12 @@ public class MainActivity extends AppCompatActivity {
         for(Item item:items){
             adapter.insert(item.name,0);
         }
+
+        List<listwordItem> listworditems;
+        listworditems = new Select().from(listwordItem.class).execute();
+        for (listwordItem item:listworditems){
+            adapter2.insert(item.listwordname,0);
+        }
     }
 
     public void onResume(){
@@ -133,21 +278,41 @@ public class MainActivity extends AppCompatActivity {
         listtitlemethod();
     }
 
-    public void passwurdmethod(){
+    public void passwurdmethod() {
 
-        int kaijo = 0;
+        spf = getSharedPreferences("listword", Context.MODE_PRIVATE);
+        String editstr = spf.getString("listword", "");
 
-        intent = getIntent();
-        kaijo = intent.getIntExtra("kaijo",0);
+        editstr2 = editstr;
+
+        //int num = 0はパスワードを入力する。
+        int num = 0;
+
+        spf = getSharedPreferences("passwordlock",Context.MODE_PRIVATE);
+        num = spf.getInt("passwordlock",0);
+
+        if (editstr == null || editstr2 == null || num == 0) {
+
+            int kaijo = 0;
 
 
-        if(kaijo == 0) {
-            intent = new Intent(this, passwordActivity.class);
-            intent.putExtra("backintent", 0);
-            startActivity(intent);
+            intent = getIntent();
+            kaijo = intent.getIntExtra("kaijo", 0);
+
+
+            if (kaijo == 0 && num == 0) {
+                intent = new Intent(this, passwordActivity.class);
+                intent.putExtra("backintent", 0);
+                startActivity(intent);
+                finish();
+            }
         }
-    }
 
+        spf = getSharedPreferences("passwordlock",Context.MODE_PRIVATE);
+        editor = spf.edit();
+        editor.putInt("passwordlock",0);
+        editor.commit();
+    }
 
     public void shishutu(View v){
         run(1);
@@ -213,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
                                                 ).show();
                                     } else {
                                         //支出・収入の金額が入力されている場合
-                                        if(moneyedit.getText().toString().equals("")){
+                                        if (moneyedit.getText().toString().equals("")) {
                                             inport = 0;
                                         }
                                         inport = Integer.valueOf(moneyedit.getText().toString());
@@ -224,13 +389,13 @@ public class MainActivity extends AppCompatActivity {
 
                                     String shuunyuustring = "";
 
+                                    int sumstring = 0;
+
                                     if (inport == 0) {
                                         //EditText moneyeditで入力した値が0の場合
                                         str = "支出・収入なし";
-                                        str2 = shuunyuustring = str;
+                                        str2 = str;
                                     } else {
-
-                                        int sumstring = 0;
 
                                         //EditText moneyeditで入力した値が0ではない場合
                                         if (ii == 1) {
@@ -242,35 +407,39 @@ public class MainActivity extends AppCompatActivity {
                                             sum = sum - inport;
                                             str = "円収入";
                                         }
-
-                                        String sumstr = "";
-
-                                        if(sum < 0) {
-                                            sumstring = sum * -1;
-                                            sumstr = "円収入";
-                                        }else{
-                                            sumstring = sum;
-                                            sumstr = "円支出";
-                                        }
-
-                                        str2 = inport + str + "を入力";
-
-                                        shuunyuustring =  sumstring + sumstr;
-
-                                        if(sum == 0){
-                                            shuunyuustring = "支出・収入なし";
-                                        }
                                     }
 
-                                    if(inport == 0){
+                                    String sumstr = "";
+
+                                    if (sum < 0) {
+                                        sumstring = sum * -1;
+                                        sumstr = "円収入";
+                                    } else {
+                                        sumstring = sum;
+                                        sumstr = "円支出";
+                                    }
+
+                                    if (inport == 0) {
+                                        str2 = str + "を入力";
+                                    } else {
+                                        str2 = inport + str + "を入力";
+                                    }
+
+                                    shuunyuustring = sumstring + sumstr;
+
+                                    if (sum == 0) {
+                                        shuunyuustring = "支出・収入なし";
+                                    }
+
+                                    if (inport == 0) {
                                         outorin.setText(str);
-                                    }else {
+                                    } else {
                                         outorin.setText(str2);
                                     }
 
                                     Calendar calendar = Calendar.getInstance();
 
-                                    int year,month,day,timehour,minits,s;
+                                    int year, month, day, timehour, minits, s;
 
                                     year = calendar.get(Calendar.YEAR);
                                     month = calendar.get(Calendar.MONTH) + 1;
@@ -279,9 +448,30 @@ public class MainActivity extends AppCompatActivity {
                                     minits = calendar.get(Calendar.MINUTE);
                                     s = calendar.get(Calendar.SECOND);
 
-                                    String inputday = "\n(保存日：" + year + "年" + month + "月" + day + "日" + timehour + "時" + minits + "分" + s +"秒)";
+                                    String inputday = "\n(保存日：" + year + "年" + month + "月" + day + "日" + timehour + "時" + minits + "分" + s + "秒)";
 
-                                    String str3 = (listtitlestring + "：" + shouhinnedittext.getText().toString()) + "\n" + "合計：" + shuunyuustring +"(" + str2 + ")" + inputday;
+                                    String resurch = shouhinnedittext.getText().toString();
+
+
+
+                                    if (resurch == null || resurch == "") {
+                                        resurch = "なし";
+                                    } else {
+
+                                        listwordItem item = new Select().from(listwordItem.class).where("listwordname =?", resurch).executeSingle();
+
+                                        if (item == null) {
+                                            adapter2.add(resurch);
+                                            listwordinsertItem(resurch);
+                                        }
+
+                                    }
+
+
+
+                                    listtitlestring = "摘要";
+
+                                    String str3 = listtitlestring + "：" +  resurch + "\n" + "合計：" + shuunyuustring +"(" + str2 + ")" + inputday;
 
                                     final String finalstr = str3;
 
@@ -317,6 +507,12 @@ public class MainActivity extends AppCompatActivity {
                                                             }
 
                                                             edittextnum = 1;
+
+                                                            spf = getSharedPreferences("mainsum",Context.MODE_PRIVATE);
+                                                            editor = spf.edit();
+                                                            editor.putInt("mainsum",sum);
+                                                            editor.commit();
+                                                            inport = 0;
 
                                                         }
                                                     }
@@ -374,6 +570,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    public void listwordinsertItem(String listwordinsert){
+        listwordItem item = new listwordItem();
+        item.listwordname = listwordinsert;
+        item.save();
+    }
+
+    public void listworddeleteItem(String listworddelete){
+        listwordItem item = new listwordItem();
+        item = new Select().from(listwordItem.class).where("listwordname =?",listworddelete).executeSingle();
+        item.delete();
+    }
+
+    public void newintlistword(String newint){
+        listwordItem item = new listwordItem();
+        item = new Select().from(listwordItem.class).where("listwordname =?",newint).executeSingle();
+    }
+
+
+
+
+
     public void insertItem(String insert){
 //        Itemクラスにデータ保存
         Item item = new Item();
@@ -394,29 +612,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void lendmoney(View v){
+
+        spf = getSharedPreferences("passwordlock",Context.MODE_PRIVATE);
+        editor = spf.edit();
+        editor.putInt("passwordlock",1);
+        editor.commit();
+
         intent = new Intent(this,shakkinnActivity.class);
         startActivity(intent);
         finish();
     }
 
-    public void listtitlesettei(View v){
-        listtitlesetteimethod();
-    }
 
     public void listtitlemethod(){
 
         passwurdmethod();
-
-        spf = getSharedPreferences("listtitle",Context.MODE_PRIVATE);
-        listtitlestring = spf.getString("listtitle","");
-
-        if(listtitlestring == "" || listtitlestring == null){
-
-            listtitlestring = "その他";
-
-        }
-
-        listtitletextView.setText(listtitlestring + "：");
 
 
         spf = getSharedPreferences("mainsum", Context.MODE_PRIVATE);
@@ -424,45 +634,23 @@ public class MainActivity extends AppCompatActivity {
 
         outorin.setText("入力データなし");
 
-        shouhinnedittext.setText("");
-        moneyedit.setText("0");
+        if(editstr2 == null){
+            editstr2 = "";
+        }
+
+        shouhinnedittext.setText(editstr2);
+        moneyedit.setText("");
+
+        spf = getSharedPreferences("listword", Context.MODE_PRIVATE);
+        editor = spf.edit();
+        editor.putString("listword",null);
+        editor.commit();
 
 
     }
 
-    public void listtitletextView(View v){
-        listtitlesetteimethod();
-    }
+//    public void listtitletextView(View v){
+//        listtitlesetteimethod();
+//    }
 
-    public void listtitlesetteimethod(){
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle(R.string.kakunin)
-                .setMessage("リストタイトルを設定しますか？")
-                .setPositiveButton(
-                        R.string.ok,
-
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                listtitleActivitymethodintent();
-                            }
-                        }
-                )
-                .setNeutralButton(
-                        R.string.cancel,
-
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                int t = 0;
-                                t++;
-                            }
-                        }
-                ).show();
-    }
-
-    public void listtitleActivitymethodintent(){
-        intent = new Intent(this,listtitleActivity.class);
-        startActivity(intent);
-    }
 }

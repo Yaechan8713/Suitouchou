@@ -6,7 +6,7 @@
     <string name="kakunin">確認</string>
     <string name="cancel">キャンセル</string>
     <string name="delete">削除</string>
-    <string name="main">出費記録　出納帳</string>
+    <string name="main">出納帳</string>
     <string name="shakkinn">借金出納帳</string>
     <string name="list">リスト表示</string>
     <string name="input2">保存</string>
@@ -15,14 +15,17 @@
     <string name="touroku">登録</string>
     <string name="settei">設定</string>
     <string name="password">パスワード</string>
+    <string name="listword">商品などのメモ内容</string>
     <string name="people">借金差出人</string>
     <string name="mainlisttitle">お買い物出納帳リストタイトル</string>
     <string name="passwordinput">パスワード設定</string>
     <string name="kashidashi">借金貸出　出納帳</string>
     <string name="reset1">初期化</string>
     <string name="repeatpassword">再度入力</string>
+    <string name="worddelete">ワード削除</string>
     <string name="reset2">リセット</string>
     <string name="pleasesettingspassword">8桁以下のパスワードを設定してください。</string>
+    <string name="deleted">項目を削除しました。(合計金額は変更していません)</string>
 
     <string-array name="spn">
         <item>買った物の商品名</item>

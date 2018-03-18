@@ -33,8 +33,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="3">
+            android:layout_weight="3"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,27 +77,50 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/listtitletextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/listtitletextView"
-                    android:textSize="25dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:onClick="listtitletextView"
+                    android:text="摘要："
                     android:textColor="@android:color/white"
-                    android:text="リストタイトル："/>
+                    android:textSize="25dp" />
 
                 <EditText
                     android:id="@+id/shouhinnedittext"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="30"
-                    android:background="@android:color/holo_red_dark"
+                    android:layout_weight="1000"
                     android:textColor="@android:color/white"
                     android:textSize="25dp" />
 
             </LinearLayout>
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_weight="1000"
+                android:background="@android:color/holo_red_light"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="摘要(候補):"
+                    android:textColor="@android:color/white"
+                    android:textSize="25dp" />
+
+            <ListView
+                android:id="@+id/tekiyoulistview"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1000" />
+
+        </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -115,6 +138,7 @@
                     android:textSize="25dp" />
 
                 <Button
+                    android:id="@+id/button6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -138,31 +162,23 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="借金出納帳を開く"
-                    android:textSize="15dp"
-                    android:onClick="lendmoney"
-                    android:layout_weight="1"/>
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="15dp"
-                    android:onClick="listtitlesettei"
-                    android:textColor="@android:color/white"
-                    android:text="リストタイトル設定"/>
+                    android:onClick="lendmoney"
+                    android:text="借金出納帳を開く"
+                    android:textSize="25dp" />
 
             </LinearLayout>
-
 
 
         </LinearLayout>

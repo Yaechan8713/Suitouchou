@@ -2,10 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="reduce.project.yaerei.suitouchou">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
-
     <application
         android:allowBackup="true"
         android:name="com.activeandroid.app.Application"
@@ -28,7 +24,7 @@
             reduce.project.yaerei.suitouchou.peopleItem,
             reduce.project.yaerei.suitouchou.shakkinnItem,
             reduce.project.yaerei.suitouchou.keishouItem,
-            reduce.project.yaerei.suitouchou.listtitleItem"/>
+            reduce.project.yaerei.suitouchou.listwordItem"/>
 
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait"
@@ -39,10 +35,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".listtitleActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/mainlisttitle"/>
 
         <activity android:name=".shakkinnActivity"
             android:screenOrientation="portrait"

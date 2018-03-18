@@ -190,7 +190,7 @@ public class passwordinputActivity extends AppCompatActivity {
     }
 
     public void kakuninnpassword(View v){
-        Toast.makeText(passwordinputActivity.this, "パスワード：" + password, Toast.LENGTH_SHORT).show();
+        Toast.makeText(passwordinputActivity.this, "只今入力されているパスワード：" + password, Toast.LENGTH_SHORT).show();
     }
 
 

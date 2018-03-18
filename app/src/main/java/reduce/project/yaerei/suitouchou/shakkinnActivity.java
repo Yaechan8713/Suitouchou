@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,7 +65,7 @@ public class shakkinnActivity extends AppCompatActivity {
 
         edittextnum = 0;
 
-        people = "";
+        peoplekara = "";
 
         peoplespr = getSharedPreferences("people",Context.MODE_PRIVATE);
         people = peoplespr.getString("people","");
@@ -73,9 +74,7 @@ public class shakkinnActivity extends AppCompatActivity {
             people = "とある人";
         }
 
-        peoplekara = people + "から";
-
-        peopletextView.setText(peoplekara);
+        peopletextView.setText(people + "から");
 
         sumtextView = (TextView)findViewById(R.id.sumtextView);
         edittext = (EditText)findViewById(R.id.edittext);
@@ -84,15 +83,58 @@ public class shakkinnActivity extends AppCompatActivity {
         sum = input = 0;
         sum = spr.getInt("shakkinnsum",0);
 
-        edittext.setText("0");
+        edittext.setText("");
 
         passwurdmethod();
 
         listview.setAdapter(adapter);
 
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                final ArrayAdapter adapter = (ArrayAdapter)listview.getAdapter();
+
+                final String item = (String)adapter.getItem(i);
+
+
+                new AlertDialog.Builder(shakkinnActivity.this)
+                        .setTitle(R.string.list)
+                        .setMessage(R.string.input + item)
+                        .setPositiveButton(
+                                R.string.kakunin,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        int t = 0;
+                                        t++;
+                                        t = 0;
+                                    }
+                                }
+                        )
+                        .setNeutralButton(
+                                R.string.delete,
+
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        delete(item);
+
+                                        adapter.remove(item);
+
+                                        Toast.makeText(shakkinnActivity.this,R.string.deleted, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                        ).show();
+            }
+        });
+
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 final ArrayAdapter adapter = (ArrayAdapter)listview.getAdapter();
 
                 final String item = (String)adapter.getItem(i);
@@ -128,17 +170,6 @@ public class shakkinnActivity extends AppCompatActivity {
                                     }
                                 }
                         ).show();
-                return false;
-            }
-        });
-
-        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ArrayAdapter adapter = (ArrayAdapter)listview.getAdapter();
-
-                final String item = (String)adapter.getItem(i);
-                adapter.insert(item,i);
 
                 return false;
             }
@@ -152,7 +183,22 @@ public class shakkinnActivity extends AppCompatActivity {
         }
     }
 
+    public void peoplekaramethod(){
+        peoplekara = people + "から";
+    }
+
     public void paymoney(View v){
+
+        SharedPreferences spf = getSharedPreferences("listword", Context.MODE_PRIVATE);
+        editor = spf.edit();
+        editor.putString("listword","");
+        editor.commit();
+
+        spr = getSharedPreferences("passwordlock",Context.MODE_PRIVATE);
+        editor = spr.edit();
+        editor.putInt("passwordlock",1);
+        editor.commit();
+
         intent = new Intent(this,MainActivity.class);
         startActivity(intent);
         finish();
@@ -192,7 +238,7 @@ public class shakkinnActivity extends AppCompatActivity {
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH) + 1;
         day = calendar.get(Calendar.DATE);
-        timehour = calendar.get(Calendar.HOUR);
+        timehour = calendar.get(Calendar.HOUR_OF_DAY);
         minits = calendar.get(Calendar.MINUTE);
         s = calendar.get(Calendar.SECOND);
 
@@ -201,7 +247,7 @@ public class shakkinnActivity extends AppCompatActivity {
 
         if(t == 0){
             sum = sum - input;
-            str1 = input + "円返金";
+            str1 = input + "円返した";
 
             str = input + "円の返金";
         }else{
@@ -212,6 +258,13 @@ public class shakkinnActivity extends AppCompatActivity {
         }
 
         str = str + "を入力";
+
+
+        if(t == 0){
+            peoplekara = people + "に";
+        }else{
+            peoplekaramethod();
+        }
 
         String str2 = "入力内容：" + peoplekara +  str1 + inputday;
 
@@ -285,6 +338,8 @@ public class shakkinnActivity extends AppCompatActivity {
                                 editor.putInt("shakkinnsum",sum);
                                 editor.commit();
 
+                                edittext.setText("");
+
                             }
                         }
                 )
@@ -344,17 +399,47 @@ public class shakkinnActivity extends AppCompatActivity {
 
     public void passwurdmethod(){
 
-        int kaijo = 0;
+        int num = 0;
 
-        intent = getIntent();
-        kaijo = intent.getIntExtra("kaijo",0);
+        spr = getSharedPreferences("passwordlock",Context.MODE_PRIVATE);
+        num = spr.getInt("passwordlock",0);
+
+        if(people == null || people == "" || num == 0){
+
+            intent = getIntent();
+            num = intent.getIntExtra("peoplenum",0);
+
+            if(people == null) {
+
+                int kaijo = 0;
+
+                intent = getIntent();
+                kaijo = intent.getIntExtra("kaijo", 0);
 
 
-        if(kaijo == 0) {
-            intent = new Intent(this, passwordActivity.class);
-            intent.putExtra("backintent", 1);
-            startActivity(intent);
+                if (kaijo == 0) {
+                    intent = new Intent(this, passwordActivity.class);
+                    intent.putExtra("backintent", 1);
+                    startActivity(intent);
+                    finish();
+                }
+
+            }
+
+            spr = getSharedPreferences("passwordlock",Context.MODE_PRIVATE);
+            editor = spr.edit();
+            editor.putInt("passwordlock",0);
+            editor.commit();
+
+            people = "とある人";
+
+            spr = getSharedPreferences("people",Context.MODE_PRIVATE);
+            editor = spr.edit();
+            editor.putString("people",null);
+            editor.commit();
         }
+
+        peoplekaramethod();
     }
 
     public void forpepole(View v){
@@ -391,6 +476,25 @@ public class shakkinnActivity extends AppCompatActivity {
                             }
                         }
                 ).show();
+    }
+
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e){
+//        戻るボタンがクリックされた時の処理
+        if(e.getKeyCode() == KeyEvent.KEYCODE_BACK){
+
+            spr = getSharedPreferences("passwordlock",Context.MODE_PRIVATE);
+            editor = spr.edit();
+            editor.putInt("passwordlock",1);
+            editor.commit();
+
+//            ↓借金差出人のレイアウトから、MainActivityに勝手に飛んでしまう原因のコード。
+            intent = new Intent(this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        return super.dispatchKeyEvent(e);
     }
 
 

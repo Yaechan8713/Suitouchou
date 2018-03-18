@@ -148,18 +148,19 @@ public class peopleActivity extends AppCompatActivity {
 
                 peoplestr = item;
 
+                if(keishoustr == null || keishoustr == ""){
+                    keishoustr = "さん";
+                }
+
                 new AlertDialog.Builder(peopleActivity.this)
                         .setTitle("次の人を借金差出人に登録しますか？")
-                        .setMessage(item)
+                        .setMessage(item + keishoustr)
                         .setPositiveButton(
                                 "登録",
 
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        if(keishoustr == null || keishoustr == ""){
-                                            keishoustr = "さん";
-                                        }
 
                                         peopletextViewmethod(item,keishoustr);
 
@@ -337,7 +338,14 @@ public class peopleActivity extends AppCompatActivity {
     public boolean dispatchKeyEvent(KeyEvent e){
 //        戻るボタンがクリックされた時の処理
         if(e.getKeyCode() == KeyEvent.KEYCODE_BACK){
+
+            spr = getSharedPreferences("passwordlock",Context.MODE_PRIVATE);
+            editor = spr.edit();
+            editor.putInt("passwordlock",1);
+            editor.commit();
+
             intent = new Intent(this,shakkinnActivity.class);
+            intent.putExtra("peoplenum",1);
             startActivity(intent);
             finish();
         }
@@ -380,6 +388,7 @@ public class peopleActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     adapter.add(item);
                                     insertItem(item);
+                                    peopleeditText.setText("");
 
                                 }
                             }
@@ -396,7 +405,6 @@ public class peopleActivity extends AppCompatActivity {
                             }
                     ).show();
 
-            peopleeditText.setText("");
         }
     }
 }
